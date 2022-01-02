@@ -1,0 +1,17 @@
+<div [class]="'card '+class">
+    <div class="card-body">
+        <h5 class="card-title">Top 5 joueurs</h5>
+
+        <div class="mb-4" *ngFor="let s of tops">
+            <p class="mb-2">
+                {{s.name}}
+                <span class="float-right text-muted">
+                    {{s.count}}/{{totlaReservation}}
+                </span>
+            </p>
+            <div class="progress">
+                <progressbar [value]="(s.count / totlaReservation) * 100"></progressbar>
+            </div>
+        </div>
+    </div>
+</div>

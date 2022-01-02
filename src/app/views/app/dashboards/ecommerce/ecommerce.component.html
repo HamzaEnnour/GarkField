@@ -1,0 +1,166 @@
+<div class="row">
+  <div class="col-12">
+    <app-heading [title]="'Comptabilité'"></app-heading>
+    <app-breadcrumb></app-breadcrumb>
+    <div class="separator mb-5"></div>
+  </div>
+</div>
+<div class="row mb-3">
+  <div *ngFor="let item of stats" class="col-md-4 col-sm-12 mb-3">
+    <div class="icon-row-item" style="width: inherit;">
+      <div class="card">
+      
+        <div class="card-body text-center">
+        
+          <i [class]="item.icon" [ngStyle]="{ 'color' : item.color }"></i>
+          <p class="card-text font-weight-bold" style="margin-top: 10px; margin-bottom: 10px;">
+            {{ item.name }}
+          </p>
+          <p class="lead text-center"> {{ item.amount }} DT</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="row" [ngStyle]="{'padding-bottom' : isMobile ? '120px' : '10px'}">
+  <div class="col-12">
+    <div class="card h-100">
+      <div class="card-body" id="data-table">
+        <div class="mb-2" style="display: flex; padding-left: 1.5rem; padding-right: 1.5rem; padding-top: 1.5rem;">
+          <h1 class="card-title" style="font-size: 1.75rem;"> <i class="flaticon-clipboard"></i> Détails </h1>
+          <div style="margin: 0 auto;"></div>
+          <div class="mr-md-3" *ngIf="!isMobile">
+            <button class="btn btn-gradiant btn-shadow" style="height: 38px;" (click)="clickCreateIncome()"> Ajouter
+              revenue
+            </button>
+          </div>
+          <div *ngIf="!isMobile">
+            <button class="btn btn-danger btn-shadow" style="height: 38px;" (click)="clickCreateSpent()"> Ajouter
+              dépense
+            </button>
+          </div>
+        </div>
+        <div *ngIf="isMobile" style="display: flex; margin-bottom: 10px; padding-left: 1.5rem; padding-right: 1.5rem">
+          <div>
+            <button class="btn btn-gradiant btn-shadow" style="height: 38px;" (click)="clickCreateIncome()"> Ajouter
+              revenue
+            </button>
+          </div>
+          <div style="margin: 0 auto;"></div>
+          <div>
+            <button class="btn btn-danger btn-shadow" style="height: 38px;" (click)="clickCreateSpent()"> Ajouter
+              dépense
+            </button>
+          </div>
+        </div>
+        <div>
+
+          <div class="input-group mb-3" style="padding-left: 1.5rem; padding-right: 1.5rem">
+            <input type="text" class="form-control" #search id="search" placeholder="Chercher ..." aria-label="Chercher"
+              aria-describedby="search-addon">
+            <div class="input-group-append">
+              <span class="input-group-text" id="search-addon">
+                <button type="button" class="btn btn-search" [popover]="popTemplate" [outsideClick]="true"
+                  triggers="click" #pop="bs-popover" popoverTitle="Appliquer des filtres" placement="auto">
+                  <i class="flaticon-setting-lines"></i>
+                </button>
+              </span>
+            </div>
+          </div>
+          <div>
+            <ng-template #popTemplate style="width: calc(100vw - 50%);">
+              <button class="btn btn-block btn-danger btn-sm mb-2" (click)="filter('spent');pop.hide();"> Dépenses </button>
+              <button class="btn btn-block btn-gradiant btn-sm mb-2" (click)="filter('income');pop.hide();"> Revenus </button>
+            </ng-template>
+          </div>
+          <div *ngIf="filterType != ''">
+            <span style="padding-left: 1.5rem;">Filtre: </span>
+            <!-- <button type="button" class="btn btn-info">
+              <span id="group"> 
+                <button type="button" class="btn btn-info btn-sm">  
+                  <span *ngIf="filterType == 'income'"> Revenus </span>
+                  <span *ngIf="filterType == 'spent'"> Dépenses </span>
+                </button> 
+                <span (click)="dismissFilter()" class="badge badge-light">&times;</span> 
+              </span> 
+              
+               <span (click)="dismissFilter()" class="badge badge-light">&times;</span>
+            </button> -->
+
+            <button class="btn-filter btn-filter-success" style="vertical-align: revert;">
+              <span (click)="dismissFilter()"
+                class="badge-filter badge-filter-dark badge-filter-corner radius-filter-0">&times;</span>
+              <span *ngIf="filterType == 'income'"> Revenus </span>
+              <span *ngIf="filterType == 'spent'"> Dépenses </span>
+            </button>
+          </div>
+
+
+        </div>
+ 
+        <div class="dashboard-best-sellers">
+          <ngx-datatable #table class="material mt-2" [messages]="my_messages" [rows]="finances"
+            [loadingIndicator]="loadingIndicator" [columns]="columns" [columnMode]="ColumnMode.force"
+            [headerHeight]="75" [footerHeight]="100" rowHeight="auto" [limit]="currentPageLimit"
+            [reorderable]="reorderable">
+
+            <ngx-datatable-column prop="label" name="Désignation" [flexGrow]="3">
+              <ng-template let-row="row" class="fs-8" let-value="value" ngx-datatable-cell-template>
+                <span class="fs-8">{{ value  }}</span>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column *ngIf="!isMobile" name="Date" prop="date" [flexGrow]="2">
+              <ng-template let-row="row" class="fs-8" let-value="value" ngx-datatable-cell-template>
+                <span class="fs-8"> {{ value | date  }}</span>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column *ngIf="!isMobile" name="Type" prop="isSpent" [flexGrow]="1">
+              <ng-template let-row="row" class="fs-8" let-value="value" ngx-datatable-cell-template>
+                <span class="fs-8" *ngIf="value == true"> Dépense </span>
+                <span class="fs-8" *ngIf="value != true"> Revenu </span>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Montant" prop="amount" [flexGrow]="1">
+              <ng-template let-row="row" class="fs-8" let-value="value" ngx-datatable-cell-template>
+                <span class="fs-8" [ngStyle]="{ 'color' : (value < 0) ? 'red' : '#21f56d' }"> {{ value  }}DT </span>
+              </ng-template>
+            </ngx-datatable-column>
+              <ngx-datatable-column name="Action" prop="menu" [width]='100' [flexGrow]="1">
+              <!--<div>
+              <ng-template #popTemplate  let-row="row" let-value="value" ngx-datatable-cell-template>
+              <button class="btn btn-block btn-danger btn-sm mb-2" (click)="filter('spent');pop.hide();"> Dépenses </button>
+              <button class="btn btn-block btn-gradiant btn-sm mb-2" (click)="filter('income');pop.hide();"> Revenus </button>
+            </ng-template>
+            </div>
+            --> 
+         <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>    
+
+          <button mat-icon-button style="color: #3ab763;" *ngIf="row.user" (click)="Edit(row)" type="button">
+              <mat-icon>create</mat-icon>
+            </button>
+
+            <button mat-icon-button style="color: #3ab763;" *ngIf="row.user" (click)="Delete(row)" type="button">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-template>
+
+
+          </ngx-datatable-column>
+            <ngx-datatable-footer>
+              <ng-template let-rowCount="rowCount" let-pageSize="pageSize" let-selectedCount="selectedCount"
+                let-curPage="curPage" let-offset="offset" ngx-datatable-footer-template>
+                <app-datatable-pager [page]="curPage" [visiblePagesCount]="currentVisible" [size]="pageSize"
+                  [count]="rowCount" [hidden]="false" (change)="table.onFooterPage($event)">
+                </app-datatable-pager>
+              </ng-template>
+            </ngx-datatable-footer>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

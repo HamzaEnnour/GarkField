@@ -1,0 +1,48 @@
+<h1 class="text-center" *ngIf="!update" > Créer un nouveau terrain </h1>
+<h1 class="text-center" *ngIf="update" > Modifier terrain </h1>
+
+<form #createForm="ngForm" novalidate (ngSubmit)="onSubmit()">
+    <label class="form-group has-float-label">
+        <input class="form-control" style="padding: .8rem; font-size: 1.1rem" required #titre="ngModel" name="nom" [(ngModel)]="terrain.name" />
+        <span  style="font-size: 100% !important;" >Nom du terrain</span>
+        <div *ngIf="!titre.valid && createForm.submitted" class="invalid-tooltip">Champ requis!</div>
+    </label>
+    <label class="form-group has-float-label">
+        <textarea class="form-control" style="padding: .8rem; font-size: 1.1rem" required #addres="ngModel" name="address"  [(ngModel)]="terrain.address" ></textarea>
+        <span style="font-size: 100% !important;" >Adresse</span>
+        <div *ngIf="!addres.valid && createForm.submitted" class="invalid-tooltip">Champ requis!</div>
+    </label>
+    <label class="form-group has-float-label">
+        <input class="form-control" style="padding: .8rem; font-size: 1.1rem" type="number" required #frais="ngModel" name="frais" [(ngModel)]="terrain.frais" />
+        <span  style="font-size: 100% !important;" >Frais de Reservation</span>
+        <div *ngIf="!frais.valid && createForm.submitted" class="invalid-tooltip">Champ requis!</div>
+    </label>
+    <div class="pb-1 pt-2">
+      <p class="text-black mb-2">Durée d'un match</p>
+      <div class="d-flex flex-row justify-content-between mb-3">
+          <a (click)="minusMin()" class="duration-button"> - </a>
+          <span style="margin-top: auto; margin-bottom: auto;"> {{ terrain.duration }} min </span>
+          <a (click)="addMin()" class="duration-button"> + </a>
+      </div>
+  </div>
+
+    <div class="pb-4 pt-2">
+      <p class="text-black mb-2">Choisir un couleur pour ce terrain</p>
+      <div class="d-flex flex-row justify-content-between mb-3">
+        <a *ngFor="let color of colors"  (click)="choose(color)" class="color-palette" [ngClass]="{ 'active-color' : selectedColor == color }"  >
+          <div class="inner-color" [ngStyle]="{ 'background-color' : color }">  </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-lg btn-shadow btn-danger" (click)="onNoClick()" > Annuler </button>
+        <app-state-button [btnClass]="'btn btn-gradiant btn-lg btn-shadow'" [currentState]="buttonState"
+          [isDisabled]="buttonDisabled || createForm.invalid" click="onSubmit()">
+          <span *ngIf="!update" >Créer</span>
+          <span *ngIf="update" >Modifier</span>
+        </app-state-button>
+      </div>
+</form>
+
+<simple-notifications></simple-notifications>

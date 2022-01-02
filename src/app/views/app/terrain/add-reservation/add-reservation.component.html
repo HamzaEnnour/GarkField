@@ -1,0 +1,100 @@
+<form #reservForm="ngForm">
+    <h4 class="modal-title text-center" *ngIf="!update" style="margin-bottom: 0 !important;">
+        Créer une nouvelle réservation <br>
+        <span *ngIf="uniqueTerrain">{{monTerrain}}</span>
+    </h4>
+    <h4 class="modal-title text-center" *ngIf="update" style="margin-bottom: 0 !important;">
+        Modifier votre réservation <br>
+        <span *ngIf="uniqueTerrain">{{monTerrain}}</span>
+    </h4>
+    <table class="custom-event-editor" width="100%" cellpadding="5">
+        <tbody>
+            <tr>
+                <td class="e-textlabel">Réservation Pour</td>
+                <td colspan="4">
+                    <input class="e-field e-input" required placeholder="Nom du réservant"
+                        [ngModelOptions]="{standalone: true}" type="text" id="Name-Mob" name="Name"
+                        [(ngModel)]="resMobile.Name" #nm="ngModel" style="width: 100%" />
+                    <div class="text-danger" *ngIf="nm.touched && nm.invalid"> Veuillez saisir le nom du réservant
+                    </div>
+                </td>
+
+            </tr>
+            <tr>
+                <td class="e-textlabel">Numéro de téléphone</td>
+                <td colspan="4">
+                    <input class="e-field e-input" required [(ngModel)]="resMobile.num"
+                        [ngModelOptions]="{standalone: true}" required placeholder="Numéro de téléphone" type="text"
+                        id="num-mobile" #tlp="ngModel" name="num" style="width: 100%" />
+                    <div class="text-danger" *ngIf="tlp.touched || reservForm.submitted">
+                        <div *ngIf="tlp.invalid">
+                            Veuillez saisir un numéro de téléphone
+                        </div>
+                        <div *ngIf="!validateNumber() && tlp.valid">
+                            Veuillez saisir un numéro de téléphone valide
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="e-textlabel">Prix de réservation</td>
+                <td colspan="4">
+                    <input class="e-field e-input" required [disabled]="isDisabled" [(ngModel)]="resMobile.frais"
+                        placeholder="Prix de réservation" type="number" #pr="ngModel" (keyup)="UpdateLastNumber()"
+                        [ngModelOptions]="{standalone: true}" required name="frais" style="width: 100%" />
+                    <div class="text-danger" *ngIf="pr.touched || reservForm.submitted">
+                        <div *ngIf="pr.invalid">
+                            Veuillez saisir un frais
+                        </div>
+                    </div>
+                    
+                </td>
+                <td class="e-textlabel" colspan="4">
+                <mat-checkbox color="warn" [checked]="true" (change)="setInputUpdate($event.checked)" ></mat-checkbox>
+                </td>
+            </tr>
+            <tr *ngIf="!uniqueTerrain">
+                <td class="e-textlabel">Terrain</td>
+                <td colspan="4">
+                    <ejs-dropdownlist class="e-field" data-name="terrain" placeholder='Choisir un terrain'
+                        [ngModelOptions]="{standalone: true}" (change)="terrainHasChanged($event)"
+                        [dataSource]='nomTerrain' [(ngModel)]='resMobile.terrain'>
+                    </ejs-dropdownlist>
+                </td>
+            </tr>
+            <tr>
+                <td class="e-textlabel">A partir de</td>
+                <td colspan="4">
+                        <app-date-picker (valueChange)="startTimeHasChanged($event)" [timeChoosed]="resMobile.StartTime" ></app-date-picker>
+                </td>
+            </tr>
+            <tr>
+                <td class="e-textlabel">Jusqu'à</td>
+                <td colspan="4">
+                    <app-date-picker [timeChoosed]="resMobile.EndTime" ></app-date-picker>
+                </td>
+            </tr>
+
+
+        </tbody>
+    </table>
+    <div class="text-danger" *ngIf="already">
+        Terrain indisponible à cette heure
+    </div>
+    <div style="display: flex; width: 100%">
+        <div>
+            <button class="btn btn-lg btn-shadow btn-danger" (click)="onNoClick()"> Annuler
+            </button>
+        </div>
+        <div style="margin: 0 auto;"></div>
+        <div>
+            <app-state-button [btnClass]="'btn btn-secondary btn-lg btn-shadow'" [currentState]="buttonState"
+                [isDisabled]="buttonDisabled || reservForm.invalid" (click)="onSubmit()">
+                <span *ngIf="!update">Créer</span>
+                <span *ngIf="update">Modifier</span>
+            </app-state-button>
+        </div>
+    </div>
+</form>
+
+<simple-notifications></simple-notifications>

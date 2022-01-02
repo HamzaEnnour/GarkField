@@ -1,0 +1,36 @@
+<div class="row" *ngIf="type == 'stats' && !isLoading"  [sortablejs]="itemsRow" [sortablejsOptions]="{ handle: '.handle' }">
+    <div class="col-md-12 mb-2">
+        <h2> <i class="flaticon-calendar flat"></i> Réservations </h2>
+    </div>
+    <div class="col-xl-4 col-lg-6 mb-4">
+        <app-radial-process-card [title]="'Nombre de réservations d\'aujourd\'hui'"  [total]="percentToday" [type]="'percent'" [percent]="countToday" [isSortable]="true">
+        </app-radial-process-card>
+    </div>
+    <div class="col-xl-4 col-lg-6 mb-4">
+        <app-radial-process-card [title]="'Nombre de réservations de cette semaine'" [total]="percentWeek" [type]="'percent'"  [percent]="countWeek" [isSortable]="true">
+        </app-radial-process-card>
+    </div>
+    <div class="col-xl-4 col-lg-6 mb-4">
+        <app-radial-process-card [title]="'Nombre de réservations de '+currentMonth" [type]="'percent'" [total]="percentMonth" [percent]="countMonth" [isSortable]="true">
+        </app-radial-process-card>
+    </div>
+</div>
+
+<div class="row" *ngIf="type == 'money' && !isLoading" [sortablejs]="itemsRow" [sortablejsOptions]="{ handle: '.handle' }">
+    <div class="col-md-12 mb-2">
+        <h2> <i class="flaticon-money-bag flat"></i>  Revenus </h2>
+    </div>
+    <div class="col-xl-4 col-lg-6 mb-4">
+        <app-radial-process-card [title]="'Revenus d\'aujourd\'hui'" [type]="'money'" [total]="-1" [percent]="priceDay" [isSortable]="true">
+        </app-radial-process-card>
+    </div>
+    <div class="col-xl-4 col-lg-6 mb-4">
+        <app-radial-process-card [title]="'Revenus de cette semaine'" [type]="'money'" [total]="-1" [percent]="priceWeek" [isSortable]="true">
+        </app-radial-process-card>
+    </div>
+    <div class="col-xl-4 col-lg-6 mb-4">
+        <app-radial-process-card [title]="'Revenus de ' + currentMonth" [type]="'money'" [total]="-1" [percent]="priceMonth" [isSortable]="true">
+        </app-radial-process-card>
+    </div>
+</div>
+
